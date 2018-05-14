@@ -15,7 +15,6 @@ hostname=socket.gethostname()
 ts=int(time.time())
 step=60
 GAUGE="GAUGE"
-COUNTER="COUNTER"
 
 def load(hostname,metric,timestamp,step,value,counterType,tags):
     msg={
@@ -49,7 +48,7 @@ try:
             for param in ["AppendBatchAcceptedCount", "AppendBatchReceivedCount", "EventAcceptedCount", "AppendReceivedCount", "EventReceivedCount", "AppendAcceptedCount"]:
                 metric=key.replace("SOURCE.","")+"_"+param
                 value=float(res[key][param])
-                msg=load(hostname,metric,ts,step,value,COUNTER,tags)
+                msg=load(hostname,metric,ts,step,value,GAUGE,tags)
                 payload.append(msg)
 
         elif type == "CHANNEL":
@@ -62,14 +61,14 @@ try:
             for param in ["EventPutSuccessCount", "EventPutAttemptCount", "EventTakeSuccessCount", "EventTakeAttemptCount"]:
                 metric=key.replace("CHANNEL.","")+"_"+param
                 value=float(res[key][param])
-                msg=load(hostname,metric,ts,step,value,COUNTER,tags)
+                msg=load(hostname,metric,ts,step,value,GAUGE,tags)
                 payload.append(msg)
 
         elif type == "SINK":
             for param in ["BatchCompleteCount", "ConnectionFailedCount", "EventDrainAttemptCount", "ConnectionCreatedCount", "BatchEmptyCount", "ConnectionClosedCount", "EventDrainSuccessCount", "BatchUnderflowCount"]:
                 metric=key.replace("SINK.","")+"_"+param
                 value=float(res[key][param])
-                msg=load(hostname,metric,ts,step,value,COUNTER,tags)
+                msg=load(hostname,metric,ts,step,value,GAUGE,tags)
                 payload.append(msg)
 
     print json.dumps(payload)
